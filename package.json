@@ -1,0 +1,14 @@
+{
+  "name": "serverless-etl",
+  "version": "0.0.1",
+  "description": "A serverless ETL pipeline for acquiring stock market values.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "fabioaromanini",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless": "^1.54.0"
+  }
+}
