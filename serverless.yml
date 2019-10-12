@@ -33,3 +33,9 @@ resources:
     properties:
       project: ${self:provider.project}
       name: api-responses
+      lifecycle:
+        rule:
+        - action:
+            type: Delete
+          condition:
+            age: 2
