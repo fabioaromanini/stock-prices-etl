@@ -25,3 +25,11 @@ functions:
     handler: dailyInfo
     events:
       - http: path
+
+resources:
+  resources:
+    name: api-responses
+    type: storage.v1.bucket
+    properties:
+      project: ${self:provider.project}
+      name: api-responses
