@@ -4,6 +4,7 @@
   "description": "A serverless ETL pipeline for acquiring stock market values.",
   "main": "index.js",
   "scripts": {
+    "deploy": "sls deploy -v",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "fabioaromanini",
