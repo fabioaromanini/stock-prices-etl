@@ -9,5 +9,8 @@ exports.dailyInfo = async symbol => {
     + '?function=TIME_SERIES_INTRADAY&outputsize=full'
     + `&symbol=${symbol}&interval=1min&apikey=${API_KEY}`
   );
+  
+  data['Meta Data']['7. Request Timestamp'] = new Date().toISOString();
+
   return data;
 };
