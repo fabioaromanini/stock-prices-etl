@@ -1,7 +1,7 @@
 {
-  "name": "serverless-etl",
+  "name": "serverless-stock-prices-etl",
   "version": "0.0.1",
-  "description": "A serverless ETL pipeline for acquiring stock market values.",
+  "description": "A serverless ETL pipeline for acquiring stock market values from alphavantage.com.",
   "main": "index.js",
   "scripts": {
     "deploy": "sls deploy -v",
