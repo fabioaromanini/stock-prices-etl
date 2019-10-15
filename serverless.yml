@@ -20,22 +20,35 @@ package:
     - .gitignore
     - .git/**
 
+custom:
+  dailyInfoTopicName: dailyInfoTopic
+
 functions:
   dailyInfo:
     handler: dailyInfo
     events:
-      - http: path
+      - event:
+          eventType: providers/cloud.pubsub/eventTypes/topic.publish
+          resource: projects/${self:provider.project}/topics/${self:custom.dailyInfoTopicName}
 
 resources:
   resources:
-    name: api-responses
-    type: storage.v1.bucket
-    properties:
-      project: ${self:provider.project}
-      name: api-responses
-      lifecycle:
-        rule:
-        - action:
-            type: Delete
-          condition:
-            age: 2
+    - name: api-responses
+      type: storage.v1.bucket
+      properties:
+        project: ${self:provider.project}
+        name: api-responses
+        lifecycle:
+          rule:
+          - action:
+              type: Delete
+            condition:
+              age: 2
+    - name: ${self:custom.dailyInfoTopicName}
+      type: pubsub.v1.topic
+      properties:
+        topic: ${self:custom.dailyInfoTopicName}
+    - name: ${self:custom.dailyInfoTopicName}
+      type: pubsub.v1.topic
+      properties:
+        topic: ${self:custom.dailyInfoTopicName}
