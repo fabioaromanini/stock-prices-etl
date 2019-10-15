@@ -1,4 +1,5 @@
 const axios = require('axios');
+const moment = require('moment');
 const conf = require('../conf/env');
 
 const { API_KEY, BASE_URL } = conf;
@@ -9,12 +10,13 @@ exports.dailyInfo = async symbol => {
     + '?function=TIME_SERIES_INTRADAY&outputsize=full'
     + `&symbol=${symbol}&interval=1min&apikey=${API_KEY}`
   );
-  
-  const meta = apiResponseData['Meta Data'];
-  const data = apiResponseData['Time Series (1min)']
 
-  meta['7. Request Timestamp'] = new Date().toISOString();
-  meta['8. Request Date'] = new Date().toISOString().split('T')[0];
+  const meta = apiResponseData['Meta Data'];
+  const data = apiResponseData['Time Series (1min)'];
+
+  const timestamp = moment();
+  meta.timestamp = timestamp;
+  meta.date = timestamp.format('YYYY-MM-DD');
   meta.dataLenght = Object.keys(data).length;
 
   return {
