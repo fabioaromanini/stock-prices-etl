@@ -22,6 +22,7 @@ package:
 
 custom:
   dailyInfoTopicName: dailyInfoTopic
+  minuteLoaderTopicName: minuteLoaderTopic
 
 functions:
   dailyInfo:
@@ -30,6 +31,13 @@ functions:
       - event:
           eventType: providers/cloud.pubsub/eventTypes/topic.publish
           resource: projects/${self:provider.project}/topics/${self:custom.dailyInfoTopicName}
+
+  minuteLoader:
+    handler: minuteLoader
+    events:
+      - event:
+          eventType: providers/cloud.pubsub/eventTypes/topic.publish
+          resource: projects/${self:provider.project}/topics/${self:custom.minuteLoaderTopicName}
 
 resources:
   resources:
@@ -48,7 +56,7 @@ resources:
       type: pubsub.v1.topic
       properties:
         topic: ${self:custom.dailyInfoTopicName}
-    - name: ${self:custom.dailyInfoTopicName}
+    - name: ${self:custom.minuteLoaderTopicName}
       type: pubsub.v1.topic
       properties:
-        topic: ${self:custom.dailyInfoTopicName}
+        topic: ${self:custom.minuteLoaderTopicName}

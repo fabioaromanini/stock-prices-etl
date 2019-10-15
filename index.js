@@ -10,3 +10,9 @@ exports.dailyInfo = async (symbol) => {
   await storageService.saveData(`${symbol}.json`, 'api-responses', dailyInfoData);
   console.log(`${dataSize} stored`);
 };
+
+exports.minuteLoader = async () => {
+  // get files in current date bucket path
+  // verify which are not yet download
+  // publish 4 messages on pubsub accordingly
+};
