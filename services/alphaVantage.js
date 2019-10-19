@@ -2,7 +2,9 @@ const axios = require('axios');
 const moment = require('moment');
 const conf = require('../conf/env');
 
-const { API_KEY, BASE_URL } = conf;
+const { API_KEY } = conf;
+
+const { BASE_URL } = process.env;
 
 exports.dailyInfo = async symbol => {
   const { data: apiResponseData } = await axios.get(
@@ -11,16 +13,14 @@ exports.dailyInfo = async symbol => {
     + `&symbol=${symbol}&interval=1min&apikey=${API_KEY}`
   );
 
-  const meta = apiResponseData['Meta Data'];
-  const data = apiResponseData['Time Series (1min)'];
-
   const timestamp = moment();
-  meta.timestamp = timestamp;
-  meta.date = timestamp.format('YYYY-MM-DD');
-  meta.dataLenght = Object.keys(data).length;
-
   return {
-    data: data,
-    meta: meta
+    data: apiResponseData['Time Series (1min)'],
+    meta: {
+      ...apiResponseData['Meta Data'],
+      timestamp: timestamp,
+      date: timestamp.format('YYYY-MM-DD'),
+      dataLenght: Object.keys(apiResponseData['Time Series (1min)']).length
+    }
   };
 };

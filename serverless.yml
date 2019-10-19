@@ -10,6 +10,8 @@ provider:
   #
   # the path to the credentials file needs to be absolute
   credentials: ~/.gcloud/keyfile.json
+  environment:
+    BASE_URL: 'https://www.alphavantage.co/query'
 
 plugins:
   - serverless-google-cloudfunctions
