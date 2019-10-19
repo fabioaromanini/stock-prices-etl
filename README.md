@@ -10,10 +10,8 @@ A serverless ETL pipeline for loading stock prices from [Alpha Vantage](https://
 ### TO DO
 
 ##### Single symbol pipeline
-* Parse transient datalake files into jsonl, and:
-  * Store jsonl in persistent datalake
-  * Aggregate data around hours and day, and stream data into bigquery
-* Automatically retrieve information for a set of symbols daily
+* Filter daily stock prices and store it as jsonl in persistent datalake
+* Aggregate data around hours and day, and stream data into bigquery
 
 ##### Symbol generalization
 * Create in memory list of stocks
