@@ -8,7 +8,7 @@ exports.dailyInfo = async (event) => {
   const dailyInfoData = await alphaVantageService.dailyInfo(symbol);
   const dataSize = dailyInfoData.meta.dataLenght;
   console.log(`${dataSize} objects retrieved from API for ${symbol}`);
-  
+
   await storageService.saveData(`${symbol}.json`, 'api-responses', dailyInfoData);
   console.log(`${dataSize} stored for ${symbol}`);
 };
@@ -20,4 +20,8 @@ exports.minuteLoader = async () => {
   // 2 - verify which are not yet download
   // 3 - select 4
   await pubsubService.publishMessage('MSFT', DAILY_INFO_TOPIC);
+};
+
+exports.apiResponseFilter = async (file) => {
+  console.log(`Triggered by file: ${file.name}`);
 };

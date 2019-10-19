@@ -41,6 +41,13 @@ functions:
       - event:
           eventType: providers/cloud.pubsub/eventTypes/topic.publish
           resource: projects/${self:provider.project}/topics/${self:custom.minuteLoaderTopicName}
+  
+  apiResponseFilter:
+    handler: apiResponseFilter
+    events:
+      - event:
+          eventType: google.storage.object.finalize
+          resource: projects/${self:provider.project}/buckets/api-responses
 
 resources:
   resources:
