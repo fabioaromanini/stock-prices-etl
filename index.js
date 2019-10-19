@@ -22,6 +22,8 @@ exports.minuteLoader = async () => {
   await pubsubService.publishMessage('MSFT', DAILY_INFO_TOPIC);
 };
 
-exports.apiResponseFilter = async (file) => {
-  console.log(`Triggered by file: ${file.name}`);
+exports.apiResponseFilter = async apiResponseFile => {
+  const fileContent = await storageService.getFileContent(apiResponseFile);
+  console.log(`Downloaded file ${apiResponseFile.name}`);
+  const { data, meta } = JSON.parse(fileContent);
 };

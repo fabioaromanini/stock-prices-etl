@@ -11,3 +11,12 @@ exports.saveData = async (filename, bucket, content) => {
     { metadata: { contentType: 'application/json' } }
   );
 };
+
+exports.getFileContent = async (file) => {
+  const bucketFile = await client
+    .bucket(file.bucket)
+    .file(file.name)
+    .download();
+
+  return bucketFile.toString();
+};
