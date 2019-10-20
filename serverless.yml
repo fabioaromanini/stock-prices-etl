@@ -50,6 +50,7 @@ functions:
           resource: projects/${self:provider.project}/buckets/api-responses
 
 resources:
+# GCS
   resources:
     - name: api-responses
       type: storage.v1.bucket
@@ -62,6 +63,13 @@ resources:
               type: Delete
             condition:
               age: 2
+    - name: persistent-parsed-data
+      type: storage.v1.bucket
+      properties:
+        project: ${self:provider.project}
+        name: persistent-parsed-data
+
+# PubSub
     - name: ${self:custom.dailyInfoTopicName}
       type: pubsub.v1.topic
       properties:
