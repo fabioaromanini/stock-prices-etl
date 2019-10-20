@@ -2,6 +2,7 @@
 const alphaVantageService = require('./services/alphaVantage');
 const pubsubService = require('./services/pubsub');
 const storageService = require('./services/storage');
+const dataParsingService = require('./services/dataParsing');
 
 exports.dailyInfo = async (event) => {
   const symbol = pubsubService.parseMessage(event);
@@ -25,5 +26,15 @@ exports.minuteLoader = async () => {
 exports.apiResponseFilter = async apiResponseFile => {
   const fileContent = await storageService.getFileContent(apiResponseFile);
   console.log(`Downloaded file ${apiResponseFile.name}`);
+
   const { data, meta } = JSON.parse(fileContent);
+  const dateToInclude = meta["3. Last Refreshed"].split(' ')[0]; // format = 2019-10-14 16:00:00
+  
+  const dailyEvents = (
+    Object
+      .keys(data)
+      .filter(key => key.includes(dateToInclude))
+      .map(key => dataParsingService.parseMinuteEvent(key, data, meta))
+  );
+  console.log(`Got ${dailyEvents.lenght} events for ${dateToInclude} in file ${apiResponseFile.name}`);
 };
