@@ -4,17 +4,17 @@ const pubsubService = require('./services/pubsub');
 const storageService = require('./services/storage');
 const dataParsingService = require('./services/dataParsing');
 
+const { RAW_STOCK_DATA_STORAGE, DAILY_INFO_TOPIC } = process.env;
+
 exports.extractStockData = async (event) => {
   const symbol = pubsubService.parseMessage(event);
   const dailyInfoData = await alphaVantageService.dailyInfo(symbol);
   const dataSize = dailyInfoData.meta.dataLenght;
   console.log(`${dataSize} objects retrieved from API for ${symbol}`);
 
-  await storageService.saveJsonData(`${symbol}.json`, 'api-responses', dailyInfoData);
+  await storageService.saveJsonData(`${symbol}.json`, RAW_STOCK_DATA_STORAGE, dailyInfoData);
   console.log(`${dataSize} stored for ${symbol}`);
 };
-
-const { DAILY_INFO_TOPIC } = process.env;
 
 exports.minuteLoader = async () => {
   // 1 - get files in current date bucket path

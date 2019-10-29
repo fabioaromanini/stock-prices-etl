@@ -11,6 +11,7 @@ provider:
   # the path to the credentials file needs to be absolute
   credentials: ~/.gcloud/keyfile.json
   environment:
+    RAW_STOCK_DATA_STORAGE: ${self:custom.rawStockDataStorage}
     DAILY_INFO_TOPIC: ${self:custom.dailyInfoTopicName}
     BASE_URL: 'https://www.alphavantage.co/query'
 
@@ -26,6 +27,7 @@ package:
 custom:
   dailyInfoTopicName: dailyInfoTopic
   minuteLoaderTopicName: minuteLoaderTopic
+  rawStockDataStorage: rawStockDataStorage
 
 functions:
   extractStockData:
@@ -47,22 +49,22 @@ functions:
     events:
       - event:
           eventType: google.storage.object.finalize
-          resource: projects/${self:provider.project}/buckets/api-responses
+          resource: projects/${self:provider.project}/buckets/rawStockData
 
 resources:
 # GCS
   resources:
-    - name: api-responses
+    - name: rawStockData
       type: storage.v1.bucket
       properties:
         project: ${self:provider.project}
-        name: api-responses
+        name: ${self:custom.rawStockDataStorage}
         lifecycle:
           rule:
           - action:
               type: Delete
             condition:
-              age: 2
+              age: 5
     - name: persistent-parsed-data
       type: storage.v1.bucket
       properties:
