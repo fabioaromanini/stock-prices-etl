@@ -4,7 +4,7 @@ const pubsubService = require('./services/pubsub');
 const storageService = require('./services/storage');
 const dataParsingService = require('./services/dataParsing');
 
-exports.dailyInfo = async (event) => {
+exports.extractStockData = async (event) => {
   const symbol = pubsubService.parseMessage(event);
   const dailyInfoData = await alphaVantageService.dailyInfo(symbol);
   const dataSize = dailyInfoData.meta.dataLenght;

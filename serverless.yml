@@ -28,8 +28,8 @@ custom:
   minuteLoaderTopicName: minuteLoaderTopic
 
 functions:
-  dailyInfo:
-    handler: dailyInfo
+  extractStockData:
+    handler: extractStockData
     events:
       - event:
           eventType: providers/cloud.pubsub/eventTypes/topic.publish
