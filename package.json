@@ -10,7 +10,7 @@
   "author": "fabioaromanini",
   "license": "ISC",
   "devDependencies": {
-    "serverless": "^1.54.0",
+    "serverless": "^1.55.1",
     "serverless-google-cloudfunctions": "^2.3.3"
   },
   "dependencies": {
