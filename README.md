@@ -10,11 +10,11 @@ A serverless ETL pipeline for loading stock prices from [Alpha Vantage](https://
 
 ### TO DO
 
-##### Single symbol pipeline
-* Aggregate data around hours and day, and stream data into bigquery
-
 ##### Symbol generalization
 * Create in memory list of stocks
 * Check downloaded stocks
 * Select 4 that are not yet downloaded
 * Trigger **single symbol pipeline** for each
+
+##### Data loading
+* Load parsed data into BigQuery
