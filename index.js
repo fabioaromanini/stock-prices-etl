@@ -16,17 +16,17 @@ const stockList = require('./static/stockList');
 const stockSet = new Set(stockList);
 
 exports.extractStockData = async (event) => {
-  const symbol = pubsubService.parseMessage(event);
-  console.log(`Extracting data for ${symbol}`);
+  const stock = pubsubService.parseMessage(event);
+  console.log(`Extracting data for ${stock}`);
   try {
-    const dailyInfoData = await alphaVantageService.dailyInfo(symbol);
+    const dailyInfoData = await alphaVantageService.dailyInfo(stock);
     const dataSize = dailyInfoData.meta.dataLenght;
-    console.log(`${dataSize} objects retrieved from API for ${symbol}`);
+    console.log(`${dataSize} objects retrieved from API for ${stock}`);
 
-    await storageService.saveJsonData(`${symbol}.json`, RAW_STOCK_DATA_STORAGE, dailyInfoData);
-    console.log(`${dataSize} stored for ${symbol}`);
+    await storageService.saveJsonData(`${stock}.json`, RAW_STOCK_DATA_STORAGE, dailyInfoData);
+    console.log(`${dataSize} stored for ${stock}`);
   } catch (e) {
-    console.error(`Failed to get stock data for ${symbol}`);
+    console.error(`Failed to get stock data for ${stock}`);
   }
 };
 
