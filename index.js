@@ -4,7 +4,11 @@ const pubsubService = require('./services/pubsub');
 const storageService = require('./services/storage');
 const dataParsingService = require('./services/dataParsing');
 
-const { RAW_STOCK_DATA_STORAGE, DAILY_INFO_TOPIC } = process.env;
+const {
+  RAW_STOCK_DATA_STORAGE,
+  PARSED_STOCK_DATA_STORAGE,
+  DAILY_INFO_TOPIC
+} = process.env;
 
 exports.extractStockData = async (event) => {
   const symbol = pubsubService.parseMessage(event);
@@ -23,7 +27,7 @@ exports.minuteLoader = async () => {
   await pubsubService.publishMessage('MSFT', DAILY_INFO_TOPIC);
 };
 
-exports.apiResponseFilter = async apiResponseFile => {
+exports.transformStockData = async apiResponseFile => {
   const fileContent = await storageService.getFileContent(apiResponseFile);
   console.log(`Downloaded file ${apiResponseFile.name}`);
 
@@ -38,6 +42,6 @@ exports.apiResponseFilter = async apiResponseFile => {
   console.log(`Got ${dailyEvents.length} events for ${dateToInclude} in file ${apiResponseFile.name}`);
 
   const newFileName = `${apiResponseFile.name}l`;
-  await storageService.saveJsonlData(newFileName, 'persistent-parsed-data', dailyEvents);
+  await storageService.saveJsonlData(newFileName, PARSED_STOCK_DATA_STORAGE, dailyEvents);
   console.log(`${dailyEvents.length} stored for ${newFileName}`);
 };
