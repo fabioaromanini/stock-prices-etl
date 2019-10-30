@@ -30,6 +30,8 @@ custom:
   stockSelectorTriggerName: stockSelectorTrigger
   rawStockDataStorage: raw-stock-data-storage
   parsedStockDataStorage: parsed-stock-data-storage
+  stockBigqueryDatasetName: stock_dataset
+  stockBigqueryTableName: stock_table
 
 functions:
   extractStockData:
@@ -82,3 +84,46 @@ resources:
       type: pubsub.v1.topic
       properties:
         topic: ${self:custom.stockSelectorTriggerName}
+    
+    # Bigquery
+    - name: ${self:custom.stockBigqueryDatasetName}
+      type: bigquery.v2.dataset
+      properties:
+        name: ${self:custom.stockBigqueryDatasetName}
+        datasetReference:
+          datasetId: ${self:custom.stockBigqueryDatasetName}
+    - name: ${self:custom.stockBigqueryTableName}
+      type: bigquery.v2.table
+      properties:
+        tableReference:
+          tableId: ${self:custom.stockBigqueryTableName}
+        name: ${self:custom.stockBigqueryTableName}
+        datasetId: $(ref.${self:custom.stockBigqueryDatasetName}.datasetReference.datasetId)
+        schema:
+          fields:
+            - name: date
+              type: DATE
+            - name: symbol
+              type: STRING
+            - name: open
+              type: NUMERIC
+            - name: close
+              type: NUMERIC
+            - name: low
+              type: NUMERIC
+            - name: high
+              type: NUMERIC
+            - name: volume
+              type: NUMERIC
+            - name: extracted_at
+              type: TIMESTAMP
+            - name: transformed_at
+              type: TIMESTAMP
+            - name: tick
+              type: STRING
+        timePartitioning:
+          type: DAY
+          field: date
+        clustering:
+          fields: 
+            - symbol
