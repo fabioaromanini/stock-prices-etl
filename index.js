@@ -7,7 +7,7 @@ const dataParsingService = require('./services/dataParsing');
 const {
   RAW_STOCK_DATA_STORAGE,
   PARSED_STOCK_DATA_STORAGE,
-  DAILY_INFO_TOPIC
+  STOCK_PIPELINE_QUEUE_NAME
 } = process.env;
 
 exports.extractStockData = async (event) => {
@@ -20,11 +20,11 @@ exports.extractStockData = async (event) => {
   console.log(`${dataSize} stored for ${symbol}`);
 };
 
-exports.minuteLoader = async () => {
+exports.stockSelector = async () => {
   // 1 - get files in current date bucket path
   // 2 - verify which are not yet download
   // 3 - select 4
-  await pubsubService.publishMessage('MSFT', DAILY_INFO_TOPIC);
+  await pubsubService.publishMessage('MSFT', STOCK_PIPELINE_QUEUE_NAME);
 };
 
 exports.transformStockData = async apiResponseFile => {

@@ -13,7 +13,7 @@ provider:
   environment:
     RAW_STOCK_DATA_STORAGE: ${self:custom.rawStockDataStorage}
     PARSED_STOCK_DATA_STORAGE: ${self:custom.parsedStockDataStorage}
-    DAILY_INFO_TOPIC: ${self:custom.dailyInfoTopicName}
+    STOCK_PIPELINE_QUEUE_NAME: ${self:custom.stockPipelineQueueName}
     BASE_URL: 'https://www.alphavantage.co/query'
 
 plugins:
@@ -26,8 +26,8 @@ package:
     - .git/**
 
 custom:
-  dailyInfoTopicName: dailyInfoTopic
-  minuteLoaderTopicName: minuteLoaderTopic
+  stockPipelineQueueName: stockPipelineQueue
+  stockSelectorTriggerName: stockSelectorTrigger
   rawStockDataStorage: rawStockDataStorage
   parsedStockDataStorage: parsedStockDataStorage
 
@@ -37,14 +37,14 @@ functions:
     events:
       - event:
           eventType: providers/cloud.pubsub/eventTypes/topic.publish
-          resource: projects/${self:provider.project}/topics/${self:custom.dailyInfoTopicName}
+          resource: projects/${self:provider.project}/topics/${self:custom.stockPipelineQueueName}
 
-  minuteLoader:
-    handler: minuteLoader
+  stockSelector:
+    handler: stockSelector
     events:
       - event:
           eventType: providers/cloud.pubsub/eventTypes/topic.publish
-          resource: projects/${self:provider.project}/topics/${self:custom.minuteLoaderTopicName}
+          resource: projects/${self:provider.project}/topics/${self:custom.stockSelectorTriggerName}
   
   transformStockData:
     handler: transformStockData
@@ -74,11 +74,11 @@ resources:
         name: ${self:custom.parsedStockDataStorage}
 
 # PubSub
-    - name: ${self:custom.dailyInfoTopicName}
+    - name: ${self:custom.stockPipelineQueueName}
       type: pubsub.v1.topic
       properties:
-        topic: ${self:custom.dailyInfoTopicName}
-    - name: ${self:custom.minuteLoaderTopicName}
+        topic: ${self:custom.stockPipelineQueueName}
+    - name: ${self:custom.stockSelectorTriggerName}
       type: pubsub.v1.topic
       properties:
-        topic: ${self:custom.minuteLoaderTopicName}
+        topic: ${self:custom.stockSelectorTriggerName}
