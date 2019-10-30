@@ -17,6 +17,7 @@ const stockSet = new Set(stockList);
 
 exports.extractStockData = async (event) => {
   const symbol = pubsubService.parseMessage(event);
+  console.log(`Extracting data for ${symbol}`);
   const dailyInfoData = await alphaVantageService.dailyInfo(symbol);
   const dataSize = dailyInfoData.meta.dataLenght;
   console.log(`${dataSize} objects retrieved from API for ${symbol}`);
@@ -36,6 +37,7 @@ exports.stockSelector = async () => {
   );
   const stocksToDownload = utilsService.setDifference(stockSet, downloadedStockNames);
   const selectedStocks = stocksToDownload.slice(0, 4);
+  console.log(`Triggering pipeline for stocks ${selectedStocks}`);
 
   const selectedStocksPromises = selectedStocks
     .map(
@@ -43,9 +45,11 @@ exports.stockSelector = async () => {
     )
 
   await Promise.all(selectedStocksPromises);
+  console.log(`Triggered pipeline for stocks ${selectedStocks}`);
 };
 
 exports.transformStockData = async apiResponseFile => {
+  console.log(`Parsing ${apiResponseFile.name} data`);
   const fileContent = await storageService.getFileContent(apiResponseFile);
   console.log(`Downloaded file ${apiResponseFile.name}`);
 
