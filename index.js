@@ -52,10 +52,10 @@ exports.stockSelector = async () => {
   console.log(`Triggered pipeline for stocks ${selectedStocks}`);
 };
 
-exports.transformStockData = async apiResponseFile => {
-  console.log(`Parsing ${apiResponseFile.name} data`);
-  const fileContent = await storageService.getFileContent(apiResponseFile);
-  console.log(`Downloaded file ${apiResponseFile.name}`);
+exports.transformStockData = async rawFile => {
+  console.log(`Parsing ${rawFile.name} data`);
+  const fileContent = await storageService.getFileContent(rawFile);
+  console.log(`Downloaded file ${rawFile.name}`);
 
   const { data, meta } = JSON.parse(fileContent);
   const dateToInclude = meta['3. Last Refreshed'].split(' ')[0]; // format = 2019-10-14 16:00:00
@@ -65,9 +65,9 @@ exports.transformStockData = async apiResponseFile => {
     .filter(key => key.includes(dateToInclude))
     .map(key => utilsService.parseMinuteEvent(key, data, meta));
 
-  console.log(`Got ${dailyEvents.length} events for ${dateToInclude} in file ${apiResponseFile.name}`);
+  console.log(`Got ${dailyEvents.length} events for ${dateToInclude} in file ${rawFile.name}`);
 
-  const newFileName = `${apiResponseFile.name}l`;
+  const newFileName = `${rawFile.name}l`;
   await storageService.saveJsonlData(newFileName, PARSED_STOCK_DATA_STORAGE, dailyEvents);
   console.log(`${dailyEvents.length} stored for ${newFileName}`);
 };
