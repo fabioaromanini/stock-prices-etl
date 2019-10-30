@@ -24,7 +24,7 @@ exports.stockSelector = async () => {
   // 1 - get files in current date bucket path
   // 2 - verify which are not yet download
   // 3 - select 4
-  await pubsubService.publishMessage('MSFT', STOCK_PIPELINE_QUEUE_NAME);
+  // await pubsubService.publishMessage('MSFT', STOCK_PIPELINE_QUEUE_NAME);
 };
 
 exports.transformStockData = async apiResponseFile => {
@@ -32,7 +32,7 @@ exports.transformStockData = async apiResponseFile => {
   console.log(`Downloaded file ${apiResponseFile.name}`);
 
   const { data, meta } = JSON.parse(fileContent);
-  const dateToInclude = meta["3. Last Refreshed"].split(' ')[0]; // format = 2019-10-14 16:00:00
+  const dateToInclude = meta['3. Last Refreshed'].split(' ')[0]; // format = 2019-10-14 16:00:00
 
   const dailyEvents = Object
     .keys(data)
