@@ -21,3 +21,5 @@ A serverless ETL pipeline for loading stock prices from [Alpha Vantage](https://
 * Load parsed data into BigQuery
 
 ### TO DO
+* Parametrize (?) how many stocks are downloaded per stock selection
+* Update readme with instructions for deploying and architecture diagram
