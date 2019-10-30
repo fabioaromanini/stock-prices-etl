@@ -40,3 +40,7 @@ exports.getDirectoryFilenames = async (directory, bucket) => {
     .map(file => file.name)
     .map(filename => filename.split('/')[1]) // filaname example: '2019-05-22/AMZN.json'
 };
+
+exports.getFileReference = (bucket, name) => {
+  return client.bucket(bucket).file(name);
+};
