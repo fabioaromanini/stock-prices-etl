@@ -17,3 +17,15 @@ exports.parseMinuteEvent = (key, collection, meta) => {
     minutes
   }
 };
+
+exports.setDifference = (left, right) => {
+  const diff = [];
+
+  left.forEach(entry => {
+    if (!right.has(entry)) {
+      diff.push(entry);
+    }
+  })
+
+  return diff;
+};
