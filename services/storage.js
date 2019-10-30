@@ -33,3 +33,10 @@ exports.getFileContent = async (file) => {
 
   return bucketFile.toString();
 };
+
+exports.getDirectoryFilenames = async (directory, bucket) => {
+  const [files] = await client.bucket(bucket).getFiles({ directory: directory });
+  return files
+    .map(file => file.name)
+    .map(filename => filename.split('/')[1]) // filaname example: '2019-05-22/AMZN.json'
+};
