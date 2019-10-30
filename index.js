@@ -10,6 +10,9 @@ const {
   STOCK_PIPELINE_QUEUE_NAME
 } = process.env;
 
+const stockList = require('./static/stockList');
+const stockSet = new Set(stockList);
+
 exports.extractStockData = async (event) => {
   const symbol = pubsubService.parseMessage(event);
   const dailyInfoData = await alphaVantageService.dailyInfo(symbol);
@@ -45,3 +48,4 @@ exports.transformStockData = async apiResponseFile => {
   await storageService.saveJsonlData(newFileName, PARSED_STOCK_DATA_STORAGE, dailyEvents);
   console.log(`${dailyEvents.length} stored for ${newFileName}`);
 };
+console.log(stockList.length);
