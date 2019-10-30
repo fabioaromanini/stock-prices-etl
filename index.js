@@ -1,8 +1,10 @@
 'use strict'
+const moment = require('moment');
+
 const alphaVantageService = require('./services/alphaVantage');
 const pubsubService = require('./services/pubsub');
 const storageService = require('./services/storage');
-const dataParsingService = require('./services/dataParsing');
+const utilsService = require('./services/utils');
 
 const {
   RAW_STOCK_DATA_STORAGE,
@@ -24,10 +26,23 @@ exports.extractStockData = async (event) => {
 };
 
 exports.stockSelector = async () => {
-  // 1 - get files in current date bucket path
-  // 2 - verify which are not yet download
-  // 3 - select 4
-  // await pubsubService.publishMessage('MSFT', STOCK_PIPELINE_QUEUE_NAME);
+  const currentDirectory = moment().format('YYYY-MM-DD');
+  const downloadedStockFiles = await storageService
+    .getDirectoryFilenames(currentDirectory, RAW_STOCK_DATA_STORAGE);
+  
+  const downloadedStockNames = new Set(
+    downloadedStockFiles
+      .map(filename => filename.split('.')[0]) // filename example: AMZN.json
+  );
+  const stocksToDownload = utilsService.setDifference(stockSet, downloadedStockNames);
+  const selectedStocks = stocksToDownload.slice(0, 4);
+
+  const selectedStocksPromises = selectedStocks
+    .map(
+      stock => pubsubService.publishMessage(stock, STOCK_PIPELINE_QUEUE_NAME)
+    )
+
+  await Promise.all(selectedStocksPromises);
 };
 
 exports.transformStockData = async apiResponseFile => {
@@ -40,7 +55,7 @@ exports.transformStockData = async apiResponseFile => {
   const dailyEvents = Object
     .keys(data)
     .filter(key => key.includes(dateToInclude))
-    .map(key => dataParsingService.parseMinuteEvent(key, data, meta));
+    .map(key => utilsService.parseMinuteEvent(key, data, meta));
 
   console.log(`Got ${dailyEvents.length} events for ${dateToInclude} in file ${apiResponseFile.name}`);
 
@@ -48,4 +63,3 @@ exports.transformStockData = async apiResponseFile => {
   await storageService.saveJsonlData(newFileName, PARSED_STOCK_DATA_STORAGE, dailyEvents);
   console.log(`${dailyEvents.length} stored for ${newFileName}`);
 };
-console.log(stockList.length);
