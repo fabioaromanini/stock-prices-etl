@@ -14,6 +14,8 @@ provider:
     RAW_STOCK_DATA_STORAGE: ${self:custom.rawStockDataStorage}
     PARSED_STOCK_DATA_STORAGE: ${self:custom.parsedStockDataStorage}
     STOCK_PIPELINE_QUEUE_NAME: ${self:custom.stockPipelineQueueName}
+    STOCK_BIGQUERY_DATASET_NAME: ${self:custom.stockBigqueryDatasetName}
+    STOCK_BIGQUERY_TABLE_NAME: ${self:custom.stockBigqueryTableName}
     BASE_URL: 'https://www.alphavantage.co/query'
 
 plugins:

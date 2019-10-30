@@ -5,11 +5,14 @@ const alphaVantageService = require('./services/alphaVantage');
 const pubsubService = require('./services/pubsub');
 const storageService = require('./services/storage');
 const utilsService = require('./services/utils');
+const bigqueryService = require('./services/bigquery');
 
 const {
   RAW_STOCK_DATA_STORAGE,
   PARSED_STOCK_DATA_STORAGE,
-  STOCK_PIPELINE_QUEUE_NAME
+  STOCK_PIPELINE_QUEUE_NAME,
+  STOCK_BIGQUERY_DATASET_NAME,
+  STOCK_BIGQUERY_TABLE_NAME,
 } = process.env;
 
 const stockList = require('./static/stockList');
@@ -73,5 +76,8 @@ exports.transformStockData = async rawFile => {
 };
 
 exports.loadStockData = async parsedFile => {
-  console.log(`Parsing ${parsedFile.name} data`);
+  console.log(`Creating job for ${parsedFile.name} data load`);
+  const source = storageService.getFileReference(parsedFile.bucket, parsedFile.name);
+  await bigqueryService.loadJsonlData(source, STOCK_BIGQUERY_DATASET_NAME, STOCK_BIGQUERY_TABLE_NAME);
+  console.log(`Job for ${parsedFile.name} created`);
 };
