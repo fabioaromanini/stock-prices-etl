@@ -37,7 +37,7 @@ exports.stockSelector = async () => {
     )
 
   await Promise.all(selectedStocksPromises);
-  console.log(`Triggered pipeline for stocks ${selectedStocks}`);
+  console.log(`Triggered pipeline for stocks ${selectedStocks}. ${stocksToDownload.length - 4} stocks remaining`);
 };
 
 exports.extractStockData = async (event) => {
