@@ -12,7 +12,7 @@ exports.parseMinuteEvent = (key, collection, meta) => {
     volume: element['5. volume'],
     symbol: meta['2. Symbol'],
     extracted_at: meta.timestamp,
-    parsed_at: moment(), 
+    transformed_at: moment(), 
     tick: minutes,
     date
   }
