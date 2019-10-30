@@ -34,6 +34,13 @@ custom:
   stockBigqueryTableName: stock_table
 
 functions:
+  stockSelector:
+    handler: stockSelector
+    events:
+      - event:
+          eventType: providers/cloud.pubsub/eventTypes/topic.publish
+          resource: projects/${self:provider.project}/topics/${self:custom.stockSelectorTriggerName}
+
   extractStockData:
     handler: extractStockData
     events:
@@ -41,19 +48,19 @@ functions:
           eventType: providers/cloud.pubsub/eventTypes/topic.publish
           resource: projects/${self:provider.project}/topics/${self:custom.stockPipelineQueueName}
 
-  stockSelector:
-    handler: stockSelector
-    events:
-      - event:
-          eventType: providers/cloud.pubsub/eventTypes/topic.publish
-          resource: projects/${self:provider.project}/topics/${self:custom.stockSelectorTriggerName}
-  
   transformStockData:
     handler: transformStockData
     events:
       - event:
           eventType: google.storage.object.finalize
           resource: projects/${self:provider.project}/buckets/${self:custom.rawStockDataStorage}
+
+  loadStockData:
+    handler: loadStockData
+    events:
+      - event:
+          eventType: google.storage.object.finalize
+          resource: projects/${self:provider.project}/buckets/${self:custom.parsedStockDataStorage}
 
 resources:
   resources:

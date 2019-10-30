@@ -15,21 +15,6 @@ const {
 const stockList = require('./static/stockList');
 const stockSet = new Set(stockList);
 
-exports.extractStockData = async (event) => {
-  const stock = pubsubService.parseMessage(event);
-  console.log(`Extracting data for ${stock}`);
-  try {
-    const dailyInfoData = await alphaVantageService.dailyInfo(stock);
-    const dataSize = dailyInfoData.meta.dataLenght;
-    console.log(`${dataSize} objects retrieved from API for ${stock}`);
-
-    await storageService.saveJsonData(`${stock}.json`, RAW_STOCK_DATA_STORAGE, dailyInfoData);
-    console.log(`${dataSize} stored for ${stock}`);
-  } catch (e) {
-    console.error(`Failed to get stock data for ${stock}`);
-  }
-};
-
 exports.stockSelector = async () => {
   const currentDirectory = moment().format('YYYY-MM-DD');
   const downloadedStockFiles = await storageService
@@ -52,6 +37,21 @@ exports.stockSelector = async () => {
   console.log(`Triggered pipeline for stocks ${selectedStocks}`);
 };
 
+exports.extractStockData = async (event) => {
+  const stock = pubsubService.parseMessage(event);
+  console.log(`Extracting data for ${stock}`);
+  try {
+    const dailyInfoData = await alphaVantageService.dailyInfo(stock);
+    const dataSize = dailyInfoData.meta.dataLenght;
+    console.log(`${dataSize} objects retrieved from API for ${stock}`);
+
+    await storageService.saveJsonData(`${stock}.json`, RAW_STOCK_DATA_STORAGE, dailyInfoData);
+    console.log(`${dataSize} stored for ${stock}`);
+  } catch (e) {
+    console.error(`Failed to get stock data for ${stock}`);
+  }
+};
+
 exports.transformStockData = async rawFile => {
   console.log(`Parsing ${rawFile.name} data`);
   const fileContent = await storageService.getFileContent(rawFile);
@@ -70,4 +70,8 @@ exports.transformStockData = async rawFile => {
   const newFileName = `${rawFile.name}l`;
   await storageService.saveJsonlData(newFileName, PARSED_STOCK_DATA_STORAGE, dailyEvents);
   console.log(`${dailyEvents.length} stored for ${newFileName}`);
+};
+
+exports.loadStockData = async parsedFile => {
+  console.log(`Parsing ${parsedFile.name} data`);
 };
