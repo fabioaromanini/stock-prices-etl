@@ -19,9 +19,10 @@ const stockList = require('./static/stockList');
 const stockSet = new Set(stockList);
 
 exports.stockSelector = async () => {
-  const currentDirectory = moment().format('YYYY-MM-DD');
+  const currentDate = moment().format('YYYY-MM-DD');
+  console.log(`Selecting stocks for date ${currentDate}`);
   const downloadedStockFiles = await storageService
-    .getDirectoryFilenames(currentDirectory, RAW_STOCK_DATA_STORAGE);
+    .getDirectoryFilenames(currentDate, RAW_STOCK_DATA_STORAGE);
   
   const downloadedStockNames = new Set(
     downloadedStockFiles
