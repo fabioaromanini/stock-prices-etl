@@ -2,24 +2,27 @@
 
 A serverless ETL pipeline for loading stock prices from [Alpha Vantage](https://www.alphavantage.co/) into [Google BigQuery](https://cloud.google.com/bigquery/).
 
-### DONE
+![](https://storage.cloud.google.com/etl-public-content/diagram.png)
 
-##### Data Extraction
-* Retrieve information for a given stock using pubsub messages
-* Store information about a stock in a transient datalake
+### Requirements
 
-##### Data Transforming
-* Filter daily stock prices and store it as jsonl in persistent datalake
+* conf/env.js file with the following content:
+```javascript
+module.exports = {
+  API_KEY: "string"
+}
+```
 
-##### Stock generalization
-* Create in memory list of stocks
-* Check downloaded stocks
-* Select 4 that are not yet downloaded
-* Trigger **stock pipeline** for each
+* ~/.gcloud/keyfile.json as described [here](https://serverless.com/framework/docs/providers/google/guide/credentials/).
 
-##### Data loading
-* Load parsed data into BigQuery
+### Deploy
+
+Make sure that you have [node](https://nodejs.org/en/) installed and run the following commands:
+
+```sh
+npm install
+npm run deploy
+```
 
 ### TO DO
 * Parametrize (?) how many stocks are downloaded per stock selection
-* Update readme with instructions for deploying and architecture diagram
