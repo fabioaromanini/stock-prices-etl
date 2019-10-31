@@ -1,6 +1,4 @@
-const moment = require('moment');
-
-exports.parseMinuteEvent = (key, collection, meta) => {
+exports.parseMinuteEvent = (key, collection, meta, timestamp) => {
   const [date, minutes] = key.split(' ');
   const element = collection[key];
   
@@ -12,7 +10,7 @@ exports.parseMinuteEvent = (key, collection, meta) => {
     volume: element['5. volume'],
     symbol: meta['2. Symbol'],
     extracted_at: meta.timestamp,
-    transformed_at: moment(), 
+    transformed_at: timestamp, 
     tick: minutes,
     date
   }

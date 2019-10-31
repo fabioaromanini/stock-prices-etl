@@ -1,5 +1,5 @@
 'use strict'
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 const alphaVantageService = require('./services/alphaVantage');
 const pubsubService = require('./services/pubsub');
@@ -17,6 +17,8 @@ const {
 
 const stockList = require('./static/stockList');
 const stockSet = new Set(stockList);
+
+moment.tz.setDefault('America/New_York');
 
 exports.stockSelector = async () => {
   const currentDate = moment().format('YYYY-MM-DD');
@@ -43,9 +45,10 @@ exports.stockSelector = async () => {
 
 exports.extractStockData = async (event) => {
   const stock = pubsubService.parseMessage(event);
-  console.log(`Extracting data for ${stock}`);
+  const timestamp = moment();
+  console.log(`Extracting data for ${stock} for date ${timestamp}`);
   try {
-    const dailyInfoData = await alphaVantageService.dailyInfo(stock);
+    const dailyInfoData = await alphaVantageService.dailyInfo(stock, timestamp);
     const dataSize = dailyInfoData.meta.dataLenght;
     console.log(`${dataSize} objects retrieved from API for ${stock}`);
 
@@ -64,10 +67,11 @@ exports.transformStockData = async rawFile => {
   const { data, meta } = JSON.parse(fileContent);
   const dateToInclude = meta['3. Last Refreshed'].split(' ')[0]; // format = 2019-10-14 16:00:00
 
+  const timestamp = moment();
   const dailyEvents = Object
     .keys(data)
     .filter(key => key.includes(dateToInclude))
-    .map(key => utilsService.parseMinuteEvent(key, data, meta));
+    .map(key => utilsService.parseMinuteEvent(key, data, meta, timestamp));
 
   console.log(`Got ${dailyEvents.length} events for ${dateToInclude} in file ${rawFile.name}`);
 
