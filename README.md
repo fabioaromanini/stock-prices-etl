@@ -28,3 +28,5 @@ npm run deploy
 
 ### TO DO
 * Parametrize (?) how many stocks are downloaded per stock selection
+* Improve logging with custom lib (winston maybe)
+* Make sure nothing will fail if there is no data available for a given date (holidays for instance) 
