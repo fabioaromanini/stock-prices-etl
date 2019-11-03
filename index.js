@@ -13,6 +13,7 @@ const {
   STOCK_PIPELINE_QUEUE_NAME,
   STOCK_BIGQUERY_DATASET_NAME,
   STOCK_BIGQUERY_TABLE_NAME,
+  SIMULTANEOUS_STOCK_DOWNLOADS
 } = process.env;
 
 const stockList = require('./static/stockList');
@@ -31,7 +32,7 @@ exports.stockSelector = async () => {
       .map(filename => filename.split('.')[0]) // filename example: AMZN.json
   );
   const stocksToDownload = utilsService.setDifference(stockSet, downloadedStockNames);
-  const selectedStocks = stocksToDownload.slice(0, 4);
+  const selectedStocks = stocksToDownload.slice(0, SIMULTANEOUS_STOCK_DOWNLOADS);
   console.log(`Triggering pipeline for stocks ${selectedStocks}`);
 
   const selectedStocksPromises = selectedStocks
@@ -40,7 +41,7 @@ exports.stockSelector = async () => {
     );
 
   await Promise.all(selectedStocksPromises);
-  console.log(`Triggered pipeline for stocks ${selectedStocks}. ${stocksToDownload.length - 4} stocks remaining`);
+  console.log(`Triggered pipeline for stocks ${selectedStocks}. ${stocksToDownload.length - selectedStocks.length} stocks remaining`);
 };
 
 exports.extractStockData = async (event) => {

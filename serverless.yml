@@ -17,6 +17,7 @@ provider:
     STOCK_BIGQUERY_DATASET_NAME: ${self:custom.stockBigqueryDatasetName}
     STOCK_BIGQUERY_TABLE_NAME: ${self:custom.stockBigqueryTableName}
     BASE_URL: 'https://www.alphavantage.co/query'
+    SIMULTANEOUS_STOCK_DOWNLOADS: 4
 
 plugins:
   - serverless-google-cloudfunctions
