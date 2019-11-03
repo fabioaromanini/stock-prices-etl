@@ -24,9 +24,10 @@ npm install
 npm run deploy
 ```
 
-* Create a Cloud Scheduler event with the following expression: *\* 17,18 * * 1-5*, in *Eastern Daylight Time (EDT)*, that publishes a message in *stockSelectorTrigger*
+* Create a Cloud Scheduler job with the following expression: *\* 17,18 * * 1-5*, in *Eastern Daylight Time (EDT)*, that publishes a message in *stockSelectorTrigger*
+
+* Throughout the pipeline execution, some extractions may fail because of the alphavantage API quota (5 requests per minute). To deal with this, you may also create an auxiliar Cloud Scheduler job
+that will trigger the selector a few times after the first cloud scheduler job finished. This will assure that every stock is downloaded. *PS: if the selector runs and there is no remaining stocks to download, it will simply not trigger the pipeline*. 
 
 ### TO DO
-* Parametrize (?) how many stocks are downloaded per stock selection
 * Improve logging with custom lib (winston maybe)
-* Make sure nothing will fail if there is no data available for a given date (holidays for instance) 
