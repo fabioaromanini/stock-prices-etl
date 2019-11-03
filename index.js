@@ -37,7 +37,7 @@ exports.stockSelector = async () => {
   const selectedStocksPromises = selectedStocks
     .map(
       stock => pubsubService.publishMessage(stock, STOCK_PIPELINE_QUEUE_NAME)
-    )
+    );
 
   await Promise.all(selectedStocksPromises);
   console.log(`Triggered pipeline for stocks ${selectedStocks}. ${stocksToDownload.length - 4} stocks remaining`);
@@ -68,6 +68,11 @@ exports.transformStockData = async rawFile => {
   const dateToInclude = meta['3. Last Refreshed'].split(' ')[0]; // format = 2019-10-14 16:00:00
 
   const timestamp = moment();
+  if (timestamp.format('YYYY-MM-DD') !== dateToInclude) {
+    console.log(`Latest stock prices for ${rawFile.name} are not today's. Aborting transform operation.`);
+    return;
+  }
+
   const dailyEvents = Object
     .keys(data)
     .filter(key => key.includes(dateToInclude))
