@@ -1,4 +1,4 @@
-service: serverless-etl
+service: stock-prices-etl
 
 provider:
   name: google

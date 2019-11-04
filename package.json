@@ -1,5 +1,5 @@
 {
-  "name": "serverless-stock-prices-etl",
+  "name": "stock-prices-etl",
   "version": "0.0.1",
   "description": "A serverless ETL pipeline for acquiring stock market values from alphavantage.com.",
   "main": "index.js",
