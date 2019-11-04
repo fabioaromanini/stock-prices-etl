@@ -31,3 +31,4 @@ that will trigger the selector a few times after the first cloud scheduler job f
 
 ### TO DO
 * Improve logging with custom lib (winston maybe)
+* Move source code to src and make sure it still runs
