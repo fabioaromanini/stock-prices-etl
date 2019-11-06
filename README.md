@@ -2,7 +2,7 @@
 
 A serverless ETL pipeline for loading stock prices from [Alpha Vantage](https://www.alphavantage.co/) into [Google BigQuery](https://cloud.google.com/bigquery/).
 
-![](static/etldiagram.png)
+![](src/static/etldiagram.png)
 
 ### Requirements
 

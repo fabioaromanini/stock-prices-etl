@@ -1,5 +1,5 @@
 const axios = require('axios');
-const conf = require('../conf/env');
+const conf = require('../../conf/env');
 
 const { API_KEY } = conf;
 
