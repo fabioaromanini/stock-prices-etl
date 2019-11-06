@@ -117,3 +117,9 @@ exports.dailyJobsTrigger = async event => {
   await Promise.all(jobPromises);
   console.log(`All daily jobs for date ${dateToProcess} triggered`);
 };
+
+exports.deduplicationJobTrigger = async event => {
+  const timestamp = moment();
+  const dateToProcess = timestamp.format('YYYY-MM-DD');
+  console.log(`Deduplication jobs for date ${dateToProcess} triggered`);
+};

@@ -36,7 +36,9 @@ custom:
   stockBigqueryDatasetName: stock_dataset
   stockBigqueryTableName: stock_table
   dailyJobsTriggerQueueName: dailyJobsTriggerQueue
+  deduplicationJobTriggerQueueName: deduplicationJobTriggerQueue
   dailySummariesDatamartName: daily_summaries_datamart
+  deduplicatedStockBigqueryTableName: deduplicated_stock_table
 
 functions:
   stockSelector:
@@ -68,11 +70,18 @@ functions:
           resource: projects/${self:provider.project}/buckets/${self:custom.parsedStockDataStorage}
 
   dailyJobsTrigger:
-   handler: dailyJobsTrigger
-   events:
-     - event:
-         eventType: providers/cloud.pubsub/eventTypes/topic.publish
-         resource: projects/${self:provider.project}/topics/${self:custom.dailyJobsTriggerQueueName}
+    handler: dailyJobsTrigger
+    events:
+      - event:
+          eventType: providers/cloud.pubsub/eventTypes/topic.publish
+          resource: projects/${self:provider.project}/topics/${self:custom.dailyJobsTriggerQueueName}
+
+  deduplicationJobTrigger:
+    handler: deduplicationJobTrigger
+    events:
+      - event:
+          eventType: providers/cloud.pubsub/eventTypes/topic.publish
+          resource: projects/${self:provider.project}/topics/${self:custom.deduplicationJobTriggerQueueName}
 
 resources:
   resources:
@@ -107,6 +116,10 @@ resources:
       type: pubsub.v1.topic
       properties:
         topic: ${self:custom.dailyJobsTriggerQueueName}
+    - name: ${self:custom.deduplicationJobTriggerQueueName}
+      type: pubsub.v1.topic
+      properties:
+        topic: ${self:custom.deduplicationJobTriggerQueueName}
     
     # Bigquery
     - name: ${self:custom.dailySummariesDatamartName}
