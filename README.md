@@ -30,7 +30,6 @@ npm run deploy
 that will trigger the selector a few times after the first cloud scheduler job finished. This will assure that every stock is downloaded. *PS: if the selector runs and there is no remaining stocks to download, it will simply not trigger the pipeline*. 
 
 ### TO DO
-* Move source code to src and make sure it still runs
 * Make all cloud functions idempotent OR deduplicate data on BigQuery
 * Schedule transformations jobs to run daily on BigQuery
 * Improve logging with custom lib (winston maybe)
