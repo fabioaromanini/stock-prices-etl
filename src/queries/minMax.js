@@ -78,4 +78,4 @@ module.exports = date => `SELECT
     low
   LIMIT
     1) lowest_overall
-`
+`;
