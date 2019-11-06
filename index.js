@@ -6,6 +6,8 @@ const pubsubService = require('./src/services/pubsub');
 const storageService = require('./src/services/storage');
 const utilsService = require('./src/services/utils');
 const bigqueryService = require('./src/services/bigquery');
+const queryService = require('./src/services/query');
+
 
 const {
   RAW_STOCK_DATA_STORAGE,
@@ -17,6 +19,7 @@ const {
 } = process.env;
 
 const stockList = require('./src/static/stockList');
+const jobList = require('./src/static/jobList');
 const stockSet = new Set(stockList);
 
 moment.tz.setDefault('America/New_York');
@@ -26,7 +29,7 @@ exports.stockSelector = async () => {
   console.log(`Selecting stocks for date ${currentDate}`);
   const downloadedStockFiles = await storageService
     .getDirectoryFilenames(currentDate, RAW_STOCK_DATA_STORAGE);
-  
+
   const downloadedStockNames = new Set(
     downloadedStockFiles
       .map(filename => filename.split('.')[0]) // filename example: AMZN.json
@@ -95,8 +98,18 @@ exports.loadStockData = async parsedFile => {
 
 exports.dailyJobsTrigger = async () => {
   const timestamp = moment();
+  const dateToProcess = timestamp.format('YYYY-MM-DD');
   console.log(`Triggering daily jobs for ${timestamp}`);
 
-  const dateToProcess = timestamp.format('YYYY-MM-DD');
-  console.log(`Daily jobs for date ${dateToProcess} triggered`);
+  const jobPromises = jobList.map(jobSettings => {
+    console.log(`Starting job ${jobSettings.name}`);
+    const { destination: { dataset, table } } = jobSettings;
+    const destinationTable = bigqueryService.getTable(dataset, table);
+
+    const query = queryService.getQueryCreator(jobSettings.name)(dateToProcess);
+    return bigqueryService.createQueryJob(query, destinationTable);
+  });
+
+  await Promise.all(jobPromises);
+  console.log(`All daily jobs for date ${dateToProcess} triggered`);
 };
