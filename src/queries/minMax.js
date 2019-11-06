@@ -5,7 +5,7 @@ module.exports = date => `SELECT
     AS STRUCT symbol,
     open
   FROM
-    \`etl-data-meetup.stock_dataset.stock_table\`
+    \`etl-data-meetup.stock_dataset.deduplicated_stock_table\`
   WHERE
     date = '${date}'
   ORDER BY
@@ -18,7 +18,7 @@ module.exports = date => `SELECT
     AS STRUCT symbol,
     open
   FROM
-    \`etl-data-meetup.stock_dataset.stock_table\`
+    \`etl-data-meetup.stock_dataset.deduplicated_stock_table\`
   WHERE
     date = '${date}'
   ORDER BY
@@ -31,7 +31,7 @@ module.exports = date => `SELECT
     AS STRUCT symbol,
     close
   FROM
-    \`etl-data-meetup.stock_dataset.stock_table\`
+    \`etl-data-meetup.stock_dataset.deduplicated_stock_table\`
   WHERE
     date = '${date}'
   ORDER BY
@@ -44,7 +44,7 @@ module.exports = date => `SELECT
     AS STRUCT symbol,
     close
   FROM
-    \`etl-data-meetup.stock_dataset.stock_table\`
+    \`etl-data-meetup.stock_dataset.deduplicated_stock_table\`
   WHERE
     date = '${date}'
   ORDER BY
@@ -58,7 +58,7 @@ module.exports = date => `SELECT
     high,
     tick
   FROM
-    \`etl-data-meetup.stock_dataset.stock_table\`
+    \`etl-data-meetup.stock_dataset.deduplicated_stock_table\`
   WHERE
     date = '${date}'
   ORDER BY
@@ -71,7 +71,7 @@ module.exports = date => `SELECT
     low,
     tick
   FROM
-    \`etl-data-meetup.stock_dataset.stock_table\`
+    \`etl-data-meetup.stock_dataset.deduplicated_stock_table\`
   WHERE
     date = '${date}'
   ORDER BY
