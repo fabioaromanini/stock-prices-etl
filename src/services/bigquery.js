@@ -9,3 +9,15 @@ exports.loadJsonlData = async (source, dataset, table) => {
     { sourceFormat: 'NEWLINE_DELIMITED_JSON' }
   );
 };
+
+exports.createQueryJob = (query, destination) => client.createQueryJob({
+  createDisposition: 'CREATE_IF_NEEDED',
+  writeDisposition: 'WRITE_APPEND',
+  timePartitioning: {
+    type: 'DAY',
+    field: 'date'
+  },
+  priority: 'BATCH',
+  destination,
+  query
+});
