@@ -10,13 +10,7 @@ exports.loadJsonlData = async (source, dataset, table) => {
   );
 };
 
-exports.getTable = async (dataset, table) => {
-  const datasetRef = await client.dataset(dataset).get({
-    autoCreate: true
-  });
-
-  return datasetRef[0].table(table);
-};
+exports.getTable = (dataset, table) => client.dataset(dataset).table(table);
 
 exports.createQueryJob = (query, destination) => client.createQueryJob({
   createDisposition: 'CREATE_IF_NEEDED',
