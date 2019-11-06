@@ -5,5 +5,12 @@
       "dataset": "daily_summaries_datamart",
       "table": "min_max"
     }
+  },
+  {
+    "name": "repeatedStockData",
+    "destination": {
+      "dataset": "daily_summaries_datamart",
+      "table": "repeated_stock_data"
+    }
   }
 ]
