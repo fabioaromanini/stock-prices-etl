@@ -96,10 +96,14 @@ exports.loadStockData = async parsedFile => {
   console.log(`Job for ${parsedFile.name} created`);
 };
 
-exports.dailyJobsTrigger = async () => {
+exports.dailyJobsTrigger = async event => {
   const timestamp = moment();
-  const dateToProcess = timestamp.format('YYYY-MM-DD');
   console.log(`Triggering daily jobs for ${timestamp}`);
+
+  const eventMessage = pubsubService.parseMessage(event);
+  // if the function is triggered by cloud scheduler, the event message will be '-'.
+  // otherwise, if the function is triggered by another kind of event, it will use it's message as date
+  const dateToProcess = eventMessage !== '-' ? eventMessage : timestamp.format('YYYY-MM-DD');
 
   const jobPromises = jobList.map(jobSettings => {
     console.log(`Starting job ${jobSettings.name}`);
