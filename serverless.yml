@@ -36,6 +36,7 @@ custom:
   stockBigqueryDatasetName: stock_dataset
   stockBigqueryTableName: stock_table
   dailyJobsTriggerQueueName: dailyJobsTriggerQueue
+  dailySummariesDatamartName: daily_summaries_datamart
 
 functions:
   stockSelector:
@@ -108,6 +109,12 @@ resources:
         topic: ${self:custom.dailyJobsTriggerQueueName}
     
     # Bigquery
+    - name: ${self:custom.dailySummariesDatamartName}
+      type: bigquery.v2.dataset
+      properties:
+        name: ${self:custom.dailySummariesDatamartName}
+        datasetReference:
+          datasetId: ${self:custom.dailySummariesDatamartName}
     - name: ${self:custom.stockBigqueryDatasetName}
       type: bigquery.v2.dataset
       properties:
