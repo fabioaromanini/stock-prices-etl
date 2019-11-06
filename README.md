@@ -31,5 +31,4 @@ that will trigger the selector a few times after the first cloud scheduler job f
 
 ### TO DO
 * Make all cloud functions idempotent OR deduplicate data on BigQuery
-* Schedule transformations jobs to run daily on BigQuery
 * Improve logging with custom lib (winston maybe)
