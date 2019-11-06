@@ -35,6 +35,7 @@ custom:
   parsedStockDataStorage: parsed-stock-data-storage
   stockBigqueryDatasetName: stock_dataset
   stockBigqueryTableName: stock_table
+  dailyJobsTriggerQueueName: dailyJobsTriggerQueue
 
 functions:
   stockSelector:
@@ -65,6 +66,13 @@ functions:
           eventType: google.storage.object.finalize
           resource: projects/${self:provider.project}/buckets/${self:custom.parsedStockDataStorage}
 
+  dailyJobsTrigger:
+   handler: dailyJobsTrigger
+   events:
+     - event:
+         eventType: providers/cloud.pubsub/eventTypes/topic.publish
+         resource: projects/${self:provider.project}/topics/${self:custom.dailyJobsTriggerQueueName}
+
 resources:
   resources:
     # GCS
@@ -94,6 +102,10 @@ resources:
       type: pubsub.v1.topic
       properties:
         topic: ${self:custom.stockSelectorTriggerName}
+    - name: ${self:custom.dailyJobsTriggerQueueName}
+      type: pubsub.v1.topic
+      properties:
+        topic: ${self:custom.dailyJobsTriggerQueueName}
     
     # Bigquery
     - name: ${self:custom.stockBigqueryDatasetName}

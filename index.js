@@ -92,3 +92,11 @@ exports.loadStockData = async parsedFile => {
   await bigqueryService.loadJsonlData(source, STOCK_BIGQUERY_DATASET_NAME, STOCK_BIGQUERY_TABLE_NAME);
   console.log(`Job for ${parsedFile.name} created`);
 };
+
+exports.dailyJobsTrigger = async () => {
+  const timestamp = moment();
+  console.log(`Triggering daily jobs for ${timestamp}`);
+
+  const dateToProcess = timestamp.format('YYYY-MM-DD');
+  console.log(`Daily jobs for date ${dateToProcess} triggered`);
+};
