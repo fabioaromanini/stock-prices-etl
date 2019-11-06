@@ -15,7 +15,8 @@ const {
   STOCK_PIPELINE_QUEUE_NAME,
   STOCK_BIGQUERY_DATASET_NAME,
   STOCK_BIGQUERY_TABLE_NAME,
-  SIMULTANEOUS_STOCK_DOWNLOADS
+  SIMULTANEOUS_STOCK_DOWNLOADS,
+  DEDUPLICATED_STOCK_BIGQUERY_TABLE_NAME
 } = process.env;
 
 const stockList = require('./src/static/stockList');
@@ -117,5 +118,11 @@ exports.dailyJobsTrigger = async event => {
 exports.deduplicationJobTrigger = async event => {
   const timestamp = moment();
   const dateToProcess = utilsService.getDateToProcess(timestamp, event);
-  console.log(`Deduplication jobs for date ${dateToProcess} triggered`);
+  console.log(`Starting deduplication job for date ${dateToProcess}`);
+  
+  const destinationTable = bigqueryService
+    .getTable(STOCK_BIGQUERY_DATASET_NAME, DEDUPLICATED_STOCK_BIGQUERY_TABLE_NAME);
+  const query = queryService.getQueryCreator('deduplication')(dateToProcess);
+  await bigqueryService.createQueryJob(query, destinationTable);
+  console.log(`Deduplication job for date ${dateToProcess} triggered`);
 };
