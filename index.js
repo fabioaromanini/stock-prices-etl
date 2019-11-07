@@ -122,7 +122,7 @@ exports.deduplicationJobTrigger = async event => {
   
   const destinationTable = bigqueryService
     .getTable(STOCK_BIGQUERY_DATASET_NAME, DEDUPLICATED_STOCK_BIGQUERY_TABLE_NAME);
-  const query = queryService.getQueryCreator('deduplication')(dateToProcess);
+  const query = utilsService.getDeduplicationQuery(dateToProcess);
   await bigqueryService.createQueryJob(query, destinationTable);
   console.log(`Deduplication job for date ${dateToProcess} triggered`);
 };
