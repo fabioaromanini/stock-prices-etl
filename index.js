@@ -6,8 +6,6 @@ const pubsubService = require('./src/services/pubsub');
 const storageService = require('./src/services/storage');
 const utilsService = require('./src/services/utils');
 const bigqueryService = require('./src/services/bigquery');
-const queryService = require('./src/services/query');
-
 
 const {
   RAW_STOCK_DATA_STORAGE,
