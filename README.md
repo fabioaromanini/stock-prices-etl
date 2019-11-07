@@ -31,6 +31,8 @@ npm run deploy
 that will trigger the selector a few times after the first cloud scheduler job finished. This will assure that every stock is downloaded. *PS: if the selector runs and there is no remaining stocks to download, it will simply not trigger the pipeline*. 
 
 ### TO DO
+* Rename bq tables to follow a name pattern
+* Move index logic to separate controllers
+* Automatically create datamarts for stock symbols
 * Update diagram with deduplication and dailyJobs
-* Move dailyJobs to bigquery
 * Improve logging with custom lib (winston maybe)
