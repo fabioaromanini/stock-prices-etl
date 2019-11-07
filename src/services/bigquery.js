@@ -12,6 +12,15 @@ exports.loadJsonlData = async (source, dataset, table) => {
 
 exports.getTable = (dataset, table) => client.dataset(dataset).table(table);
 
+exports.getTableContent = async (dataset, table) => {
+  const [results] = await client.query(`SELECT
+  *
+FROM 
+\`etl-data-meetup.${dataset}.${table}\`;
+`);
+  return results;
+}
+
 exports.createQueryJob = (query, destination) => client.createQueryJob({
   createDisposition: 'CREATE_IF_NEEDED',
   writeDisposition: 'WRITE_APPEND',
