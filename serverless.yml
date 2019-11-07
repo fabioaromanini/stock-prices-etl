@@ -21,6 +21,7 @@ provider:
     DEDUPLICATED_STOCK_BIGQUERY_TABLE_NAME: ${self:custom.deduplicatedStockBigqueryTableName}
     STOCK_METADATA_BIGQUERY_DATASET_NAME: ${self:custom.stockMetadataBigqueryDatasetName}
     JOB_BIGQUERY_TABLE_NAME: ${self:custom.jobBigqueryTableName}
+    ALL_STOCKS_BIGQUERY_TABLE_NAME: ${self:custom.allStocksBigqueryTableName}
 
 plugins:
   - serverless-google-cloudfunctions
@@ -44,6 +45,7 @@ custom:
   deduplicatedStockBigqueryTableName: deduplicated_stock_table
   stockMetadataBigqueryDatasetName: stock_metadata_dataset
   jobBigqueryTableName: job_table
+  allStocksBigqueryTableName: all_stocks_table
 
 functions:
   stockSelector:
@@ -196,4 +198,15 @@ resources:
             - name: destination_table
               type: STRING
             - name: query
+              type: STRING
+    - name: ${self:custom.allStocksBigqueryTableName}
+      type: bigquery.v2.table
+      properties:
+        tableReference:
+          tableId: ${self:custom.allStocksBigqueryTableName}
+        name: ${self:custom.allStocksBigqueryTableName}
+        datasetId: $(ref.${self:custom.stockMetadataBigqueryDatasetName}.datasetReference.datasetId)
+        schema:
+          fields:
+            - name: symbol
               type: STRING
