@@ -107,7 +107,7 @@ exports.dailyJobsTrigger = async event => {
     const { destination: { dataset, table } } = jobSettings;
     const destinationTable = bigqueryService.getTable(dataset, table);
 
-    const query = queryService.getQueryCreator(jobSettings.name)(dateToProcess);
+    const query = jobSettings.query.replace(/{{date}}/g, dateToProcess);
     return bigqueryService.createQueryJob(query, destinationTable);
   });
 
