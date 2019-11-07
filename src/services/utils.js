@@ -18,16 +18,12 @@ exports.parseMinuteEvent = (key, collection, meta, timestamp) => {
   }
 };
 
-exports.setDifference = (left, right) => {
-  const diff = [];
-
-  left.forEach(entry => {
-    if (!right.has(entry)) {
-      diff.push(entry);
-    }
-  })
-
-  return diff;
+exports.getStocksToDownload = (all, downloadedSet) => {
+  return all
+    .filter(
+      ({ symbol }) => !downloadedSet.has(symbol)
+    )
+    .map(stock => stock.symbol);
 };
 
 exports.getDateToProcess = (timestamp, event) => {

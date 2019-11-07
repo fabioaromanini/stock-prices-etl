@@ -16,11 +16,9 @@ const {
   SIMULTANEOUS_STOCK_DOWNLOADS,
   DEDUPLICATED_STOCK_BIGQUERY_TABLE_NAME,
   STOCK_METADATA_BIGQUERY_DATASET_NAME,
-  JOB_BIGQUERY_TABLE_NAME
+  JOB_BIGQUERY_TABLE_NAME,
+  ALL_STOCKS_BIGQUERY_TABLE_NAME
 } = process.env;
-
-const stockList = require('./src/static/stockList');
-const stockSet = new Set(stockList);
 
 moment.tz.setDefault('America/New_York');
 
@@ -34,7 +32,12 @@ exports.stockSelector = async () => {
     downloadedStockFiles
       .map(filename => filename.split('.')[0]) // filename example: AMZN.json
   );
-  const stocksToDownload = utilsService.setDifference(stockSet, downloadedStockNames);
+
+  const stockList = await bigqueryService.getTableContent(
+    STOCK_METADATA_BIGQUERY_DATASET_NAME,
+    ALL_STOCKS_BIGQUERY_TABLE_NAME
+  );
+  const stocksToDownload = utilsService.getStocksToDownload(stockList, downloadedStockNames);
   const selectedStocks = stocksToDownload.slice(0, SIMULTANEOUS_STOCK_DOWNLOADS);
   console.log(`Triggering pipeline for stocks ${selectedStocks}`);
 
