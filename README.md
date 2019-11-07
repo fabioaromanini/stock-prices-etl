@@ -14,10 +14,11 @@ module.exports = {
 ```
 
 * ~/.gcloud/keyfile.json as described [here](https://serverless.com/framework/docs/providers/google/guide/credentials/).
+* [node](https://nodejs.org/en/) >=  10.14.12
 
 ### Deploy
 
-* Make sure that you have [node](https://nodejs.org/en/) installed and run the following commands:
+* Make sure that you have installed and run the following commands:
 
 ```sh
 npm install
