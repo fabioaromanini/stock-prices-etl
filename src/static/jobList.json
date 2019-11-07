@@ -12,5 +12,12 @@
       "dataset": "daily_summaries_datamart",
       "table": "repeated_stock_data"
     }
+  },
+  {
+    "name": "greatestVariation",
+    "destination": {
+      "dataset": "daily_summaries_datamart",
+      "table": "greatest_variation"
+    }
   }
 ]
