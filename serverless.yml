@@ -19,6 +19,8 @@ provider:
     BASE_URL: 'https://www.alphavantage.co/query'
     SIMULTANEOUS_STOCK_DOWNLOADS: '4'
     DEDUPLICATED_STOCK_BIGQUERY_TABLE_NAME: ${self:custom.deduplicatedStockBigqueryTableName}
+    STOCK_METADATA_BIGQUERY_DATASET_NAME: ${self:custom.stockMetadataBigqueryDatasetName}
+    JOB_BIGQUERY_TABLE_NAME: ${self:custom.jobBigqueryTableName}
 
 plugins:
   - serverless-google-cloudfunctions
@@ -40,6 +42,8 @@ custom:
   deduplicationJobTriggerQueueName: deduplicationJobTriggerQueue
   dailySummariesDatamartName: daily_summaries_datamart
   deduplicatedStockBigqueryTableName: deduplicated_stock_table
+  stockMetadataBigqueryDatasetName: stock_metadata_dataset
+  jobBigqueryTableName: job_table
 
 functions:
   stockSelector:
@@ -170,3 +174,26 @@ resources:
         clustering:
           fields: 
             - symbol
+    - name: ${self:custom.stockMetadataBigqueryDatasetName}
+      type: bigquery.v2.dataset
+      properties:
+        name: ${self:custom.stockMetadataBigqueryDatasetName}
+        datasetReference:
+          datasetId: ${self:custom.stockMetadataBigqueryDatasetName}
+    - name: ${self:custom.jobBigqueryTableName}
+      type: bigquery.v2.table
+      properties:
+        tableReference:
+          tableId: ${self:custom.jobBigqueryTableName}
+        name: ${self:custom.jobBigqueryTableName}
+        datasetId: $(ref.${self:custom.stockMetadataBigqueryDatasetName}.datasetReference.datasetId)
+        schema:
+          fields:
+            - name: name
+              type: STRING
+            - name: destination_dataset
+              type: STRING
+            - name: destination_table
+              type: STRING
+            - name: query
+              type: STRING
