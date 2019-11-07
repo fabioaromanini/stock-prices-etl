@@ -14,11 +14,12 @@ const {
   STOCK_BIGQUERY_DATASET_NAME,
   STOCK_BIGQUERY_TABLE_NAME,
   SIMULTANEOUS_STOCK_DOWNLOADS,
-  DEDUPLICATED_STOCK_BIGQUERY_TABLE_NAME
+  DEDUPLICATED_STOCK_BIGQUERY_TABLE_NAME,
+  STOCK_METADATA_BIGQUERY_DATASET_NAME,
+  JOB_BIGQUERY_TABLE_NAME
 } = process.env;
 
 const stockList = require('./src/static/stockList');
-const jobList = require('./src/static/jobList');
 const stockSet = new Set(stockList);
 
 moment.tz.setDefault('America/New_York');
@@ -100,10 +101,18 @@ exports.dailyJobsTrigger = async event => {
   console.log(`Triggering daily jobs for ${timestamp}`);
   const dateToProcess = utilsService.getDateToProcess(timestamp, event);
 
+  const jobList = await bigqueryService.getTableContent(
+    STOCK_METADATA_BIGQUERY_DATASET_NAME,
+    JOB_BIGQUERY_TABLE_NAME
+  );
+
   const jobPromises = jobList.map(jobSettings => {
     console.log(`Starting job ${jobSettings.name}`);
-    const { destination: { dataset, table } } = jobSettings;
-    const destinationTable = bigqueryService.getTable(dataset, table);
+
+    const destinationTable = bigqueryService.getTable(
+      jobSettings.destination_dataset,
+      jobSettings.destination_table
+    );
 
     const query = jobSettings.query.replace(/{{date}}/g, dateToProcess);
     return bigqueryService.createQueryJob(query, destinationTable);
@@ -117,7 +126,7 @@ exports.deduplicationJobTrigger = async event => {
   const timestamp = moment();
   const dateToProcess = utilsService.getDateToProcess(timestamp, event);
   console.log(`Starting deduplication job for date ${dateToProcess}`);
-  
+
   const destinationTable = bigqueryService
     .getTable(STOCK_BIGQUERY_DATASET_NAME, DEDUPLICATED_STOCK_BIGQUERY_TABLE_NAME);
   const query = utilsService.getDeduplicationQuery(dateToProcess);
