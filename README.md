@@ -6,7 +6,7 @@ A serverless ETL pipeline for loading stock prices from [Alpha Vantage](https://
 
 ### Requirements
 
-* conf/env.js file with the following content:
+* conf/env.js file with an [alphavantage api key](https://www.alphavantage.co/documentation/):
 ```javascript
 module.exports = {
   API_KEY: "string"
