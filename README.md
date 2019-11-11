@@ -39,3 +39,4 @@ that will trigger the selector a few times after the first cloud scheduler job f
 * Rename bq tables to follow a name pattern
 * Update diagram with deduplication and dailyJobs
 * Improve logging with custom lib (winston maybe)
+* CI/CD
