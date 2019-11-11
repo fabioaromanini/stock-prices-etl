@@ -110,15 +110,21 @@ exports.dailyJobsTrigger = async event => {
   );
 
   const jobPromises = jobList.map(jobSettings => {
-    console.log(`Starting job ${jobSettings.name}`);
+    const { name, query, destination_dataset, destination_table } = jobSettings;
+
+    console.log(`Starting job ${name}`);
 
     const destinationTable = bigqueryService.getTable(
-      jobSettings.destination_dataset,
-      jobSettings.destination_table
+      destination_dataset,
+      destination_table
     );
 
-    const query = jobSettings.query.replace(/{{date}}/g, dateToProcess);
-    return bigqueryService.createQueryJob(query, destinationTable);
+    const params = [{
+      name: 'date',
+      parameterType: { type: 'DATE' },
+      parameterValue: { value: bigqueryService.createDateType(dateToProcess) } 
+    }];
+    return bigqueryService.createQueryJob(query, destinationTable, params);
   });
 
   await Promise.all(jobPromises);
