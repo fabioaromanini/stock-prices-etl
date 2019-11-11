@@ -41,3 +41,5 @@ exports.createQueryJob = (query, destination, params) => client.createQueryJob({
   ...getParametersConfig(params),
   query
 });
+
+exports.createDateType = date => BigQuery.date(date);
