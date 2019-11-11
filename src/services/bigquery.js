@@ -21,7 +21,15 @@ FROM
   return results;
 }
 
-exports.createQueryJob = (query, destination) => client.createQueryJob({
+const getParametersConfig = parameters => {
+  if (parameters) return {
+    parameterMode: 'NAMED',
+    queryParameters: parameters
+  };
+  else return {}
+}
+
+exports.createQueryJob = (query, destination, params) => client.createQueryJob({
   createDisposition: 'CREATE_IF_NEEDED',
   writeDisposition: 'WRITE_APPEND',
   timePartitioning: {
@@ -30,5 +38,6 @@ exports.createQueryJob = (query, destination) => client.createQueryJob({
   },
   priority: 'BATCH',
   destination,
+  ...getParametersConfig(params),
   query
 });
