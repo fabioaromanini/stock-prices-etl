@@ -36,7 +36,7 @@ that will trigger the selector a few times after the first cloud scheduler job f
 * Refactor index.js logic into separate controllers
 * Automatically create datamarts for stock symbols
 * Rename bq tables to follow a name pattern
-* Update diagram with deduplication and dailyJobs
 * Improve logging with custom lib (winston maybe)
 * CI/CD
 * ~~Improve parameter system~~
+* ~~Update diagram with deduplication and dailyJobs~~
